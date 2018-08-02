@@ -10,18 +10,18 @@ type Secant <: AbstractBisection end
 type FalsePosition <: AbstractBisection end
 type ZBrent <: AbstractBisection end
 
-function find_zero(f, bracket; xtol=1e-7, max_iter=100)
-    find_zero(Secant(), f, bracket; xtol, max_iter)
+function find_zero(f, bracket; atol=1e-7, max_iter=100)
+    find_zero(Secant(), f, bracket; atol, max_iter)
 end
 
-function find_zero(f, bracket, ::Secant; xtol=1e-7, max_iter=100)
+function find_zero(f, bracket, ::Secant, atol, max_iter)
     local x
     x0, x1 = bracket
     y0, y1 = f(x0), f(x1) 
 
     for _ in 1:max_iter
         x = x1 - y1 * (x1 - x0) / (y1 - y0)
-        if abs(x - x1) < xtol return x end
+        if abs(x - x1) < atol return x end
         x0 = x1
         y0 = y1
         x1 = x
@@ -30,12 +30,12 @@ function find_zero(f, bracket, ::Secant; xtol=1e-7, max_iter=100)
     error("Root not found")
 end
 
-function find_zero(f, bracket, ::Bisection; xtol=1e-7, max_iter=100)
+function find_zero(f, bracket, ::Bisection, atol, max_iter)
     a, b = bracket
     fa = f(a)
     local c
     for _ in 1:max_iter
-        if (b - a) <= xtol return b end
+        if (b - a) <= atol return b end
 
         c = (a + b)/2 
         fc = f(c)
