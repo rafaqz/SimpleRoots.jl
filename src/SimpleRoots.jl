@@ -11,7 +11,7 @@ type FalsePosition <: AbstractBisection end
 type ZBrent <: AbstractBisection end
 
 function find_zero(f, bracket; atol=1e-7, max_iter=100)
-    find_zero(Secant(), f, bracket; atol, max_iter)
+    find_zero(Secant(), f, bracket, atol, max_iter)
 end
 
 function find_zero(f, bracket, ::Secant, atol, max_iter)
