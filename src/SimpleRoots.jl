@@ -1,14 +1,11 @@
-__precompile__()
-
 module SimpleRoots
 
-export Bisection, Secant, ZBrent, FalsePosition, find_zero, quadm, quadp
+export Bisection, Secant, ZBrent, find_zero, quadm, quadp
 
 abstract type AbstractBisection end
-type Bisection <: AbstractBisection end
-type Secant <: AbstractBisection end
-type FalsePosition <: AbstractBisection end
-type ZBrent <: AbstractBisection end
+struct Bisection <: AbstractBisection end
+struct Secant <: AbstractBisection end
+struct ZBrent <: AbstractBisection end
 
 function find_zero(f, bracket; atol=1e-7, max_iter=100)
     find_zero(Secant(), f, bracket, atol, max_iter)
