@@ -18,13 +18,13 @@ function find_zero(f, bracket, ::Secant, atol, max_iter)
 
     for _ in 1:max_iter
         x = x1 - y1 * (x1 - x0) / (y1 - y0)
-        if abs(x - x1) < atol return x end
+        if abs(x - x1) < atol return x, true end
         x0 = x1
         y0 = y1
         x1 = x
         y1 = f(x1)
     end
-    error("Root not found")
+    return x, false
 end
 
 function find_zero(f, bracket, ::Bisection, atol, max_iter)
@@ -32,7 +32,7 @@ function find_zero(f, bracket, ::Bisection, atol, max_iter)
     fa = f(a)
     local c
     for _ in 1:max_iter
-        if (b - a) <= atol return b end
+        if (b - a) <= atol return b, true end
 
         c = (a + b)/2 
         fc = f(c)
@@ -46,7 +46,7 @@ function find_zero(f, bracket, ::Bisection, atol, max_iter)
         end
     end
 
-    error("Root not found")
+    return b, false
 end
 
 function find_zero(f, bracket, ::ZBrent; tolz=1e-7, maxiter=30)
@@ -74,7 +74,7 @@ function find_zero(f, bracket, ::ZBrent; tolz=1e-7, maxiter=30)
         tol1 = 2epsval * abs(b) + tolz/2
         xm = (c - b)/2
         if (abs(xm) <= tol1 || fb == 0fb)
-            return b
+            return b, true
         end
         if abs(e) >= tol1 && abs(fa) > abs(fb)
             s = fb / fa
@@ -110,7 +110,7 @@ function find_zero(f, bracket, ::ZBrent; tolz=1e-7, maxiter=30)
         fb = f(b)
     end
 
-    return b
+    return b, false
 end
 
 
