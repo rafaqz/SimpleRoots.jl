@@ -59,7 +59,9 @@ function findzero(f, method::Secant, atol, max_iter)
 
     for _ in 1:max_iter
         x = x1 - y1 * (x1 - x0) / (y1 - y0)
-        if abs(x - x1) < atol return x, true end
+        if abs(x - x1) < atol 
+            return x, true 
+        end
         x0 = x1
         y0 = y1
         x1 = x
@@ -79,15 +81,17 @@ function findzero(f, method::Bisection, atol, max_iter)
     fa = f(a)
     local c
     for _ in 1:max_iter
-        if (b - a) <= atol return b, true end
+        if (b - a) <= atol 
+            return b, true 
+        end
 
         c = (a + b)/2 
         fc = f(c)
-        if fa * fc > 0(fa * fc)
+        if fa * fc > zero(fa * fc)
             a = c # Root is in the right half of [a, b].
             fa = fc
-        elseif fc == 0fc
-            return c
+        elseif fc == zero(fc)
+            return c, true
         else
             b = c # Root is in the left half of [a, b].
         end
@@ -111,7 +115,7 @@ function findzero(f, method::Brent, atol, maxiter)
     c = b
     fc = fb
     for iter = 1:maxiter
-        if (fb > 0fb && fc > 0fc) || (fb < 0fb && fc < 0fc)
+        if (fb > zero(fb) && fc > zero(fc)) || (fb < zero(fb) && fc < zero(fc))
             c = a
             fc = fa
             d = b - a
@@ -141,7 +145,9 @@ function findzero(f, method::Brent, atol, maxiter)
                 p = s * (2xm * q * (q - r) - (b - a) * (r - 1))
                 q = (q - 1) * (r - 1) * (s - 1)
             end
-            if p > 0p q = -q end
+            if p > zero(p) 
+                q = -q 
+            end
             p = abs(p)
             if (2p < min(3xm * q - abs(tol1 * q), abs(e * q)))
                 e = d
@@ -210,9 +216,9 @@ function quad(res::QuadraticResult, a, b, c)
         if b == zero(b)
             c != zero(c) && throw(QuadraticError("Can't solve quadratic"))
             # return zero with correct units
-            return zero(-c / b)
+            return out(res, zero(-c / b))
         else
-            return -c / b
+            return out(res, -c / b)
         end
     else 
         return side(res, x, a, b)
@@ -223,5 +229,9 @@ quad(a, b, c) = quad(Both(), a, b, c)
 @inline side(::Both, x, a, b) = side(Lower(), x, a, b), side(Upper(), x, a, b) 
 @inline side(::Upper, x, a, b) = (-b + sqrt(x)) / 2a
 @inline side(::Lower, x, a, b) = (-b - sqrt(x)) / 2a
+
+@inline out(::Both, x) = (x, x)
+@inline out(::Upper, x) = x
+@inline out(::Lower, x) = x
 
 end # module
