@@ -3,21 +3,24 @@ using SimpleRoots, Test
 using SimpleRoots: QuadraticError
 
 @testset "test bracketing" begin
-    @testset "sin" begin
-        @test findzero(sin, (-pi, pi); atol=1e-30)[1] ≈ 0.0 atol = 100
-        @test findzero(sin, (-pi, pi); atol=1e-30)[2] == true
-        @test findzero(sin, Secant(-5.0-pi, pi); atol=1e-30)[1] ≈ 0.0 atol = 100
-        @test findzero(sin, Secant(-5.0-pi, pi); atol=1e-30)[2] == true
-        @test findzero(sin, Brent(-5.0, pi); atol=1e-30)[1] ≈ 0.0 atol = 100
-        @test findzero(sin, Brent(-5.0, pi); atol=1e-30)[2] == true
-        @test findzero(sin, Bisection(-5.0, pi); atol=1e-100, max_iter=500)[1] ≈ 0.0 atol = 100
-        @test findzero(sin, Bisection(-5.0, pi); atol=1e-100, max_iter=500)[2] == false
+    @testset "sin 0.0 is 0.0" begin
+        @test findzero(sin, (-1.0, 1.3); atol=1e-30)[1] ≈ 0.0 atol = 1e-30
+        @test findzero(sin, (-1.0, 1.3); atol=1e-30)[2] == true
+        @test findzero(sin, Secant(-1.0, 1.3); atol=1e-30)[1] ≈ 0.0 atol = 1e-30
+        @test findzero(sin, Secant(-1.0, 1.3); atol=1e-30)[2] == true
+        @test findzero(sin, Brent(-1.0, 1.3); atol=1e-30)[1] ≈ 0.0 atol = 1e-30
+        @test findzero(sin, Brent(-1.0, 1.3); atol=1e-30)[2] == true
+        @test findzero(sin, Bisection(-1.0, 1.3); atol=1e-100, max_iter=500)[1] ≈ 0.0 atol = 1e-30
+        @test findzero(sin, Bisection(-1.0, 1.3); atol=1e-100, max_iter=500)[2] == true
+    end
 
-        @test findzero(sin, (-5.0, pi); atol=1e-30, max_iter=1)[2] == false
-        @test findzero(sin, Secant(-5.0, pi); atol=1e-30, max_iter=1)[2] == false
-        @test findzero(sin, Brent(-5.0, pi); atol=1e-30, max_iter=1)[2] == false
-        @test findzero(sin, Bisection(-5.0, pi); atol=1e-100, max_iter=1)[2] == false
-        @test findzero(sin, Bisection(-5.0, -5.0); atol=1e-100, max_iter=1)[2] == true
+    @testset "sin with 1 iteration isn't found" begin
+        @test findzero(sin, (-1.0, 1.3); atol=1e-30, max_iter=1)[2] == false
+        @test findzero(sin, Secant(-1.0, 1.3); atol=1e-30, max_iter=1)[2] == false
+        @test findzero(sin, Brent(-1.0, 1.3); atol=1e-30, max_iter=1)[2] == false
+        @test findzero(sin, Bisection(-1.0, 1.3); atol=1e-100, max_iter=1)[2] == false
+        # Except bisection when the bracket is symmetrical
+        @test findzero(sin, Bisection(-1.0, -1.0); atol=1e-100, max_iter=1)[2] == true
     end
 
     @testset "sin(x) - x / 2" begin
@@ -29,10 +32,10 @@ using SimpleRoots: QuadraticError
     end
 
     @testset "inference" begin
-        @inferred findzero(sin, (-5.0, 4.0); atol=1e-100, max_iter=1)
-        @inferred findzero(sin, Secant(-5.0, 4.0); atol=1e-100, max_iter=1)
-        @inferred findzero(sin, Brent(-5.0, 4.0); atol=1e-100, max_iter=1)
-        @inferred findzero(sin, Bisection(-5.0, 4.0); atol=1e-100, max_iter=1)
+        @inferred findzero(sin, (-1.0, 1.0); atol=1e-100, max_iter=100)
+        @inferred findzero(sin, Secant(-1.0, 1.0); atol=1e-100, max_iter=100)
+        @inferred findzero(sin, Brent(-1.0, 1.0); atol=1e-100, max_iter=100)
+        @inferred findzero(sin, Bisection(-1.0, 1.0); atol=1e-100, max_iter=100)
     end
 end
 
