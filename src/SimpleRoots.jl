@@ -131,7 +131,7 @@ function findzero(f, method::Brent, atol, maxiter)
         end
         tol1 = 2epsval * abs(b) + atol/2
         xm = (c - b)/2
-        if (abs(xm) <= tol1 || fb == 0fb)
+        if (abs(xm) <= tol1 || fb == zero(fb))
             return b, true
         end
         if abs(e) >= tol1 && abs(fa) > abs(fb)
