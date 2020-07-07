@@ -50,6 +50,12 @@ end
     @test quad(Lower(), 1.0, 0.0, 0.0) == 0.0 
     @test quad(Upper(), 1.0, 0.0, 0.0) == 0.0
 
+    @test quad(Both(), 0.0, 0.0, 0.0) == (0.0, 0.0) 
+    @test quad(Lower(), 0.0, 0.0, 0.0) == 0.0 
+    @test quad(Upper(), 0.0, 0.0, 0.0) == 0.0
+
     @test_throws QuadraticError quad(1.0, 1.0, 1.0)
     @test_throws QuadraticError quad(0.0, 0.0, 1.0)
+
+    @inferred quad(1.0, 3.0, -4.0)
 end
