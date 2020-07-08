@@ -21,18 +21,19 @@ Included are bracketed `findzero` methods including:
 - Bisection
 - Secant
 
+A tuple is returned, containing the value and a `Bool` for sucsess:
 
 ```julia-repl
-julia> findzero(cos, Secant(0.0, pi))
+julia> findzero(sin, Secant(-0.5, 0.5))
 (0.0, true)
 ```
 
-And a basic quadratic solver `quad`:
+A basic quadratic solver `quad` is also included:
 
 ```julia-repl
 julia> quad(1.0, 3.0, -4.0)
 (-4.0, 1.0)
 ```
 
-Accuracy and quality of methods is definitely lower and fas less
+Accuracy and quality of methods is probably lower, and is far less
 well tested than Roots.jl. For non-modelling purposes, use Roots.jl.
